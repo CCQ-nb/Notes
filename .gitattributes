@@ -1,0 +1,5 @@
+# 二进制文件：不做行尾转换与文本合并
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.pdf binary

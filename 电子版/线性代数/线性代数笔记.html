@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>线性代数笔记 · 电子整理版</title>
+<style>
+:root{
+  --ink:#1f2328; --ink-soft:#5b636c; --line:#dfe5ec;
+  --blue:#1d4f8c; --blue-l:#2f6db5; --blue-bg:#eef4fb;
+  --amber:#a5611a; --amber-bg:#fdf6ea;
+  --yellow:#8a6d00; --yellow-bg:#fffbdc; --yellow-line:#c9a227;
+  --gray-bg:#f4f5f6;
+}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0; padding:0 16px 80px;
+  background:#eceff3; color:var(--ink);
+  font-family:"Source Han Serif SC","Noto Serif CJK SC","Songti SC",SimSun,"Times New Roman",serif;
+  font-size:16.5px; line-height:1.95;
+}
+.page{
+  max-width:920px; margin:0 auto; background:#fff;
+  padding:56px 64px 72px; box-shadow:0 2px 18px rgba(31,45,61,.08);
+}
+/* 页眉 */
+.doc-head{border-bottom:2px solid var(--blue); padding-bottom:18px; margin-bottom:26px;}
+.doc-head h1{
+  margin:0; font-size:34px; letter-spacing:.18em; font-weight:700; color:#12243c;
+  font-family:"Source Han Sans SC","Microsoft YaHei","PingFang SC",sans-serif;
+}
+.doc-sub{margin:8px 0 0; color:var(--blue); font-size:15px; letter-spacing:.28em;}
+.doc-meta{margin:6px 0 0; color:var(--ink-soft); font-size:13px;}
+/* 工具栏 */
+.toolbar{
+  position:sticky; top:0; z-index:50; display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  background:rgba(255,255,255,.94); backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line); padding:10px 0 10px; margin:-10px 0 22px;
+}
+.toolbar input[type=search]{
+  flex:1 1 220px; min-width:160px; padding:7px 12px; font-size:14px;
+  border:1px solid var(--line); border-radius:6px; outline:none; background:#fbfcfd; color:var(--ink);
+  font-family:inherit;
+}
+.toolbar input[type=search]:focus{border-color:var(--blue-l); background:#fff; box-shadow:0 0 0 3px rgba(47,109,181,.12);}
+.toolbar button{
+  padding:7px 14px; font-size:13.5px; border-radius:6px; cursor:pointer;
+  border:1px solid var(--line); background:#f7f9fb; color:#26313d; font-family:inherit;
+}
+.toolbar button:hover{background:#eef4fb; border-color:#b9cee6; color:var(--blue);}
+.toolbar button.on{background:var(--blue-l); border-color:var(--blue-l); color:#fff;}
+.hit-count{font-size:13px; color:var(--ink-soft); min-width:64px;}
+mark.hit{background:#ffe98a; color:inherit; padding:0 1px; border-radius:2px;}
+body.editing #content{outline:1px dashed #b9cee6; outline-offset:12px;}
+/* 目录 */
+.toc{margin:4px 0 40px; padding:18px 24px 14px; background:#f7f9fb; border:1px solid var(--line); border-radius:8px;}
+.toc-title{font-family:"Source Han Sans SC","Microsoft YaHei",sans-serif; font-weight:700; letter-spacing:.3em;
+  color:var(--blue); font-size:15px; margin-bottom:8px;}
+.toc-list{list-style:none; margin:0; padding:0; columns:2; column-gap:34px;}
+.toc-list li{font-size:14px; line-height:1.85; break-inside:avoid;}
+.toc-list li a{color:#2b3a4a; text-decoration:none; border-bottom:1px dotted transparent;}
+.toc-list li a:hover{color:var(--blue-l); border-bottom-color:var(--blue-l);}
+.toc-l3{padding-left:14px; font-size:13.5px; color:var(--ink-soft);}
+.toc-l3 a{color:#4a5563;}
+/* 标题层级 */
+h2{
+  font-family:"Source Han Sans SC","Microsoft YaHei","PingFang SC",sans-serif;
+  font-size:25px; color:#123a63; line-height:1.5;
+  margin:58px 0 20px; padding:6px 0 6px 16px; border-left:6px solid var(--blue-l);
+  background:linear-gradient(90deg,#f2f7fc 0%,rgba(242,247,252,0) 78%);
+}
+h2.chapter{margin-top:64px;}
+#content > h2:first-of-type{margin-top:24px;}
+h3{
+  font-family:"Source Han Sans SC","Microsoft YaHei","PingFang SC",sans-serif;
+  font-size:19.5px; color:#1a4a7a; margin:38px 0 12px; padding-bottom:6px;
+  border-bottom:1px dashed #c9d6e4; letter-spacing:.02em;
+}
+h4{font-size:17px; color:#25405c; margin:26px 0 8px;}
+p{margin:0 0 13px; text-align:justify;}
+strong{font-weight:700; color:#152c47;}
+em{font-style:normal; color:var(--ink-soft); font-size:.94em;}
+code{font-family:Consolas,"Courier New",monospace; background:#f1f3f5; padding:1px 5px; border-radius:3px; font-size:.92em;}
+hr{border:0; border-top:1px solid var(--line); margin:34px 0;}
+/* 列表 */
+ul,ol{margin:0 0 14px; padding-left:1.7em;}
+li{margin:5px 0;}
+li::marker{color:var(--blue-l);}
+/* 公式 */
+math{font-family:"Cambria Math","Latin Modern Math","STIX Two Math","Times New Roman",serif; font-size:1.06em;}
+math[display="block"]{margin:.42em auto; padding:0; overflow-x:auto; overflow-y:hidden;}
+math mtd{text-align:left;}
+math mtable{margin:0 .35em;}
+.mathblock{text-align:center; margin:16px 0; max-width:100%; overflow-x:auto;}
+.mathblock math[display="block"]{margin:0 auto;}
+/* 表格 */
+.table-wrap{overflow-x:auto; margin:18px 0 22px;}
+table{border-collapse:collapse; width:auto; min-width:100%; font-size:14.5px; line-height:1.75;}
+table math{font-size:.96em;}
+th,td{border:1px solid #dbe3ec; padding:8px 11px; text-align:left; vertical-align:top;}
+th{background:#eef3f9; color:#1c3f65; font-weight:700; white-space:nowrap;}
+tbody tr:nth-child(even){background:#fafbfd;}
+/* 提示框 */
+.callout{
+  margin:18px 0; padding:13px 18px 15px; border-radius:6px; font-size:15.5px; line-height:1.85;
+  break-inside:avoid;
+}
+.callout .callout-title{
+  font-family:"Source Han Sans SC","Microsoft YaHei",sans-serif;
+  font-weight:700; font-size:13.5px; letter-spacing:.12em; margin-bottom:6px;
+}
+.callout-body > :last-child{margin-bottom:0;}
+.callout-body p{margin:0 0 8px;}
+.callout-body .mathblock{margin:10px 0;}
+.callout.key{background:var(--blue-bg); border-left:4px solid var(--blue-l);}
+.callout.key .callout-title{color:#17457c;}
+.callout.warn{background:var(--amber-bg); border-left:4px solid #d98324;}
+.callout.warn .callout-title{color:#95540f;}
+.callout.note{background:var(--gray-bg); border-left:4px solid #98a2ac; color:#4d565f; font-size:14.5px;}
+.callout.note .callout-title{color:#5e6a75;}
+.callout.todo{
+  background:var(--yellow-bg); border:1.5px dashed var(--yellow-line);
+  padding:13px 18px 12px;
+}
+.callout.todo .callout-title{color:var(--yellow);}
+.editline{display:flex; align-items:flex-end; gap:10px; margin-top:12px; font-size:12.5px; color:var(--yellow);}
+.editline .editlabel{white-space:nowrap; letter-spacing:.08em;}
+.editline .rule{flex:1; border-bottom:1px dashed var(--yellow-line); height:18px;}
+blockquote{margin:16px 0; padding:10px 18px; border-left:3px solid var(--line); color:var(--ink-soft);}
+/* 打印 */
+@page{size:A4; margin:17mm 15mm 16mm;}
+@media print{
+  body{background:#fff; font-size:10.8pt; line-height:1.78; padding:0;}
+  .page{box-shadow:none; max-width:none; padding:0;}
+  .toolbar{display:none !important;}
+  .toc{background:#fff; border-color:#ccc; break-after:page;}
+  .toc-list{columns:2;}
+  h2{break-before:page; margin-top:0; font-size:17pt; background:none;}
+  #content > h2:first-of-type, .toc + h2{break-before:auto;}
+  h3{break-after:avoid; font-size:13pt;}
+  .callout,.table-wrap,table,tr,.mathblock{break-inside:avoid;}
+  .mathblock{overflow:visible;}
+  table{font-size:9.6pt;}
+  math{font-size:1.02em;}
+  mark.hit{background:none;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="toolbar">
+  <input id="q" type="search" placeholder="全文检索：输入关键词，例如 定理名、符号、人名" autocomplete="off">
+  <span class="hit-count" id="qcount"></span>
+  <button id="clear" type="button">清除</button>
+  <button id="edit" type="button">编辑模式</button>
+  <button id="print" type="button">打印 / 导出 PDF</button>
+</div>
+<main id="content">
+<header class="doc-head">
+<h1>线性代数笔记</h1>
+<p class="doc-sub"><strong>行列式 · 矩阵</strong></p>
+<p class="doc-meta">据手写原稿 10 页（P.01–P.10）整理 · 电子版 v1.0</p>
+</header>
+<nav class="toc"><div class="toc-title">目 录</div><ul class="toc-list"><li class="toc-l2"><a href="#sec1">整理说明</a></li><li class="toc-l2"><a href="#sec2">第一章 行列式</a></li><li class="toc-l3"><a href="#sec3">1.1 余子式与代数余子式</a></li><li class="toc-l3"><a href="#sec4">1.2 按行（列）展开</a></li><li class="toc-l3"><a href="#sec5">1.3 排列展开法</a></li><li class="toc-l3"><a href="#sec6">1.4 行列式的性质</a></li><li class="toc-l3"><a href="#sec7">1.5 范德蒙德行列式</a></li><li class="toc-l3"><a href="#sec8">1.6 子式与 Laplace 定理</a></li><li class="toc-l3"><a href="#sec9">1.7 Cramer 法则</a></li><li class="toc-l3"><a href="#sec10">1.8 行列式的运算性质</a></li><li class="toc-l3"><a href="#sec11">1.9 注意</a></li><li class="toc-l3"><a href="#sec12">1.10 方法与思路</a></li><li class="toc-l2"><a href="#sec13">第二章 矩阵</a></li><li class="toc-l3"><a href="#sec14">2.1 矩阵的定义与特殊矩阵</a></li><li class="toc-l3"><a href="#sec15">2.2 加法与数乘</a></li><li class="toc-l3"><a href="#sec16">2.3 矩阵乘法</a></li><li class="toc-l3"><a href="#sec17">2.4 转置</a></li><li class="toc-l3"><a href="#sec18">2.5 对称矩阵与反对称矩阵</a></li><li class="toc-l3"><a href="#sec19">2.6 可逆矩阵与伴随矩阵</a></li><li class="toc-l3"><a href="#sec20">2.7 分块矩阵</a></li><li class="toc-l3"><a href="#sec21">2.8 注意（原稿此页空白）</a></li><li class="toc-l3"><a href="#sec22">2.9 方法与思路</a></li><li class="toc-l2"><a href="#sec23">附录 A 公式速查表</a></li><li class="toc-l2"><a href="#sec24">附录 B 原稿页码对照</a></li></ul></nav>
+<h2 id="sec1">整理说明</h2>
+<p><strong>一、内容来源与结构</strong></p>
+<p>原稿分两部分：行列式（P.01–P.05）与矩阵（P.06–P.10），每部分仍按 <strong>性质 → 注意 → 方法与思路</strong> 的三段式记录。电子版保留原稿顺序与措辞，不作数学上的“美化”，仅统一记号、补齐排版；凡对原文有改动或存疑处，均以标记框说明。页码对照见附录 B。</p>
+<p><strong>二、标记约定</strong></p>
+<div class="table-wrap"><table>
+<thead><tr><th>标记</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td>【要点】</td><td>定义、定理与必须记住的结论，蓝色框</td></tr>
+<tr><td>【易错】</td><td>原稿以 ☆ 标出的易错点与成立条件，橙色框</td></tr>
+<tr><td>【待确认】</td><td>字迹模糊、表述有歧义或疑似笔误之处，黄色虚线框；框下留有修改行</td></tr>
+<tr><td>【补注】</td><td>整理者补充，原稿没有，可自行删除</td></tr>
+</tbody></table></div>
+<p><strong>三、修改与检索</strong></p>
+<ul>
+<li>全部公式以 LaTeX 书写，源文件“线性代数笔记.md”可直接编辑；同目录下的“线性代数笔记.html”用浏览器打开即可阅读、检索（Ctrl + F 或页首搜索框）与打印。</li>
+<li>网页版页首有“编辑模式”按钮，点击后可直接在页面上改动文字（改动需另存网页才会保留）。</li>
+</ul>
+<h2 id="sec2" class="chapter">第一章 行列式</h2>
+<p><em>原稿 P.01–P.05</em></p>
+<h3 id="sec3">1.1 余子式与代数余子式</h3>
+<p>在 <math display="inline"><mi>n</mi></math> 阶行列式中，划去元素 <math display="inline"><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></math> 所在的第 <math display="inline"><mi>i</mi></math> 行与第 <math display="inline"><mi>j</mi></math> 列，剩余元素按原次序组成的 <math display="inline"><mi>n</mi><mo>−</mo><mn>1</mn></math> 阶行列式，称为 <math display="inline"><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></math> 的<strong>余子式</strong>，记作 <math display="inline"><msub><mi>M</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></math>；称</p>
+<div class="mathblock"><math display="block"><msub><mi>A</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mrow><mi>i</mi><mo>+</mo><mi>j</mi></mrow></msup><msub><mi>M</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></math></div>
+<p>为 <math display="inline"><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></math> 的<strong>代数余子式</strong>。</p>
+<p><strong>例</strong>（原稿 P.01）</p>
+<div class="mathblock"><math display="block"><mi>D</mi><mo>=</mo><mrow><mo>|</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>4</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd><mtd><mn>3</mn></mtd><mtd><mn>1</mn></mtd></mtr></mtable><mo>|</mo></mrow><mo>,</mo><mspace width="2em"></mspace><msub><mi>M</mi><mrow><mn>11</mn></mrow></msub><mo>=</mo><mrow><mo>|</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd><mn>1</mn></mtd></mtr></mtable><mo>|</mo></mrow><mo>,</mo><mspace width="2em"></mspace><msub><mi>A</mi><mrow><mn>11</mn></mrow></msub><mo>=</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mrow><mn>1</mn><mo>+</mo><mn>1</mn></mrow></msup><msub><mi>M</mi><mrow><mn>11</mn></mrow></msub><mo>.</mo></math></div>
+<h3 id="sec4">1.2 按行（列）展开</h3>
+<p><strong>按第 1 列展开</strong></p>
+<div class="mathblock"><math display="block"><mi>D</mi><mo>=</mo><msub><mi>a</mi><mrow><mn>11</mn></mrow></msub><msub><mi>A</mi><mrow><mn>11</mn></mrow></msub><mo>+</mo><msub><mi>a</mi><mrow><mn>21</mn></mrow></msub><msub><mi>A</mi><mrow><mn>21</mn></mrow></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>a</mi><mrow><mi>n</mi><mn>1</mn></mrow></msub><msub><mi>A</mi><mrow><mi>n</mi><mn>1</mn></mrow></msub><mspace width="2em"></mspace><mo stretchy="false">(</mo><mi>n</mi><mo>&gt;</mo><mn>1</mn><mo stretchy="false">)</mo></math></div>
+<div class="callout key"><div class="callout-title">要点</div><div class="callout-body"><p>一般地，行列式可按任一行（或任一列）展开：</p>
+<div class="mathblock"><math display="block"><mi>D</mi><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></msubsup><msub><mi>a</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><msub><mi>A</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></msubsup><msub><mi>a</mi><mrow><mi>k</mi><mi>j</mi></mrow></msub><msub><mi>A</mi><mrow><mi>k</mi><mi>j</mi></mrow></msub><mo>.</mo></math></div>
+</div></div>
+<p><strong>上三角行列式</strong></p>
+<div class="mathblock"><math display="block"><mrow><mo>|</mo><mtable><mtr><mtd><msub><mi>a</mi><mrow><mn>11</mn></mrow></msub></mtd><mtd><msub><mi>a</mi><mrow><mn>12</mn></mrow></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>a</mi><mrow><mn>1</mn><mi>n</mi></mrow></msub></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><msub><mi>a</mi><mrow><mn>22</mn></mrow></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>a</mi><mrow><mn>2</mn><mi>n</mi></mrow></msub></mtd></mtr><mtr><mtd><mo>⋮</mo></mtd><mtd><mo>⋮</mo></mtd><mtd><mo>⋱</mo></mtd><mtd><mo>⋮</mo></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>a</mi><mrow><mi>n</mi><mi>n</mi></mrow></msub></mtd></mtr></mtable><mo>|</mo></mrow><mo>=</mo><msubsup><mo>∏</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></msubsup><msub><mi>a</mi><mrow><mi>i</mi><mi>i</mi></mrow></msub></math></div>
+<p>即主对角线上元素之积。对角行列式与下三角行列式同理。</p>
+<h3 id="sec5">1.3 排列展开法</h3>
+<div class="mathblock"><math display="block"><mi>D</mi><mo>=</mo><msub><mo>∑</mo><mrow><msub><mi>p</mi><mn>1</mn></msub><msub><mi>p</mi><mn>2</mn></msub><mo>⋯</mo><msub><mi>p</mi><mi>n</mi></msub></mrow></msub><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mrow><mi>T</mi><mo stretchy="false">(</mo><msub><mi>p</mi><mn>1</mn></msub><msub><mi>p</mi><mn>2</mn></msub><mo>⋯</mo><msub><mi>p</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></msup><msub><mi>a</mi><mrow><mn>1</mn><msub><mi>p</mi><mn>1</mn></msub></mrow></msub><msub><mi>a</mi><mrow><mn>2</mn><msub><mi>p</mi><mn>2</mn></msub></mrow></msub><mo>⋯</mo><msub><mi>a</mi><mrow><mi>n</mi><msub><mi>p</mi><mi>n</mi></msub></mrow></msub></math></div>
+<p>其中 <math display="inline"><mi>T</mi><mo stretchy="false">(</mo><msub><mi>p</mi><mn>1</mn></msub><msub><mi>p</mi><mn>2</mn></msub><mo>⋯</mo><msub><mi>p</mi><mi>n</mi></msub><mo stretchy="false">)</mo></math> 为排列 <math display="inline"><msub><mi>p</mi><mn>1</mn></msub><msub><mi>p</mi><mn>2</mn></msub><mo>⋯</mo><msub><mi>p</mi><mi>n</mi></msub></math> 的<strong>逆序数</strong>；<math display="inline"><msub><mi>p</mi><mn>1</mn></msub><msub><mi>p</mi><mn>2</mn></msub><mo>⋯</mo><msub><mi>p</mi><mi>n</mi></msub></math> 取遍 <math display="inline"><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mo>⋯</mo><mo>,</mo><mi>n</mi></math> 的全排列，不允许重复。</p>
+<div class="callout warn"><div class="callout-title">易错</div><div class="callout-body"><p>把 <math display="inline"><mi>n</mi></math> 阶行列式完全展开，共有 <math display="inline"><mi>n</mi><mo>!</mo></math> 项（原稿以 ☆ 标出）。</p>
+</div></div>
+<h3 id="sec6">1.4 行列式的性质</h3>
+<p><strong>① 行列互换，值不变</strong></p>
+<div class="mathblock"><math display="block"><msup><mi>D</mi><mrow><mtext>T</mtext></mrow></msup><mo>=</mo><mi>D</mi><mo>.</mo></math></div>
+<p><strong>② 数乘一行（列）</strong></p>
+<p>用数 <math display="inline"><mi>k</mi></math> 乘行列式的某一行（列），等于用 <math display="inline"><mi>k</mi></math> 乘整个行列式；即 <math display="inline"><mi>D</mi></math> 的某行（列）都乘 <math display="inline"><mi>k</mi></math>，则 <math display="inline"><mi>D</mi></math> 变为 <math display="inline"><mi>k</mi><mi>D</mi></math>。</p>
+<p><strong>③ 某行（列）全为零</strong></p>
+<p>若 <math display="inline"><mi>D</mi></math> 的某一行（列）元素全为 <math display="inline"><mn>0</mn></math>，则 <math display="inline"><mi>D</mi><mo>=</mo><mn>0</mn></math>。</p>
+<p><strong>④ 两行（列）相同</strong></p>
+<p>若 <math display="inline"><mi>D</mi></math> 有两行（列）元素相同，则 <math display="inline"><mi>D</mi><mo>=</mo><mn>0</mn></math>。</p>
+<p><strong>⑤ 交换两行（列）</strong></p>
+<p>交换两行（列）的位置，<math display="inline"><mi>D</mi></math> 反号。</p>
+<p><strong>⑥ 异乘变零</strong></p>
+<p><math display="inline"><mi>D</mi></math> 的某行（列）元素与另一行（列）对应元素的代数余子式之积的和为 <math display="inline"><mn>0</mn></math>。</p>
+<p><strong>⑦ 两行（列）成比例</strong></p>
+<p>若有两行（列）元素成比例，则 <math display="inline"><mi>D</mi><mo>=</mo><mn>0</mn></math>。</p>
+<p><strong>⑧ 展开定理的完整形式</strong></p>
+<div class="mathblock"><math display="block"><msub><mi>a</mi><mrow><mi>i</mi><mn>1</mn></mrow></msub><msub><mi>A</mi><mrow><mi>j</mi><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>a</mi><mrow><mi>i</mi><mn>2</mn></mrow></msub><msub><mi>A</mi><mrow><mi>j</mi><mn>2</mn></mrow></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>a</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><msub><mi>A</mi><mrow><mi>j</mi><mi>n</mi></mrow></msub><mo>=</mo><mrow><mo>{</mo><mtable><mtr><mtd><mi>D</mi><mo>,</mo><mspace width="1.1em"></mspace><mi>i</mi><mo>=</mo><mi>j</mi></mtd></mtr><mtr><mtd><mn>0</mn><mo>,</mo><mspace width="1.1em"></mspace><mi>i</mi><mo>≠</mo><mi>j</mi></mtd></mtr></mtable></mrow></math></div>
+<p><strong>⑨ 行列式的拆分</strong></p>
+<p>若 <math display="inline"><mi>D</mi></math> 的某行（列）可表示为两组元素之和，即 <math display="inline"><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><msub><mi>b</mi><mi>j</mi></msub><mo>+</mo><msub><mi>c</mi><mi>j</mi></msub></math>，则该行可拆成两个行列式之和。</p>
+<p><strong>⑩ 倍加不变</strong></p>
+<p>把第 <math display="inline"><mi>j</mi></math> 行的 <math display="inline"><mi>k</mi></math> 倍加到第 <math display="inline"><mi>i</mi></math> 行，<math display="inline"><mi>D</mi></math> 不变（列同理）。</p>
+<h3 id="sec7">1.5 范德蒙德行列式</h3>
+<div class="mathblock"><math display="block"><msub><mi>D</mi><mi>n</mi></msub><mo>=</mo><mrow><mo>|</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>1</mn></mtd><mtd><mo>⋯</mo></mtd><mtd><mn>1</mn></mtd></mtr><mtr><mtd><msub><mi>a</mi><mn>1</mn></msub></mtd><mtd><msub><mi>a</mi><mn>2</mn></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>a</mi><mi>n</mi></msub></mtd></mtr><mtr><mtd><msubsup><mi>a</mi><mn>1</mn><mn>2</mn></msubsup></mtd><mtd><msubsup><mi>a</mi><mn>2</mn><mn>2</mn></msubsup></mtd><mtd><mo>⋯</mo></mtd><mtd><msubsup><mi>a</mi><mi>n</mi><mn>2</mn></msubsup></mtd></mtr><mtr><mtd><mo>⋮</mo></mtd><mtd><mo>⋮</mo></mtd><mtd></mtd><mtd><mo>⋮</mo></mtd></mtr><mtr><mtd><msubsup><mi>a</mi><mn>1</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msubsup></mtd><mtd><msubsup><mi>a</mi><mn>2</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msubsup></mtd><mtd><mo>⋯</mo></mtd><mtd><msubsup><mi>a</mi><mi>n</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msubsup></mtd></mtr></mtable><mo>|</mo></mrow><mo>=</mo><msub><mo>∏</mo><mrow><mn>1</mn><mo>≤</mo><mi>j</mi><mo>&lt;</mo><mi>i</mi><mo>≤</mo><mi>n</mi></mrow></msub><mo stretchy="false">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>−</mo><msub><mi>a</mi><mi>j</mi></msub><mo stretchy="false">)</mo></math></div>
+<p>即所有“下标大的减下标小的”因子之积；当 <math display="inline"><msub><mi>a</mi><mi>i</mi></msub></math> 互不相同时 <math display="inline"><msub><mi>D</mi><mi>n</mi></msub><mo>≠</mo><mn>0</mn></math>。</p>
+<div class="callout note"><div class="callout-title">补注</div><div class="callout-body"><p>原稿写作 <math display="inline"><mo>∏</mo><mo stretchy="false">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>−</mo><msub><mi>a</mi><mi>j</mi></msub><mo stretchy="false">)</mo></math> 并在下方注明 <math display="inline"><mn>1</mn><mo>≤</mo><mi>j</mi><mo>&lt;</mo><mi>i</mi><mo>≤</mo><mi>n</mi></math>，此处合并写成一式。</p>
+</div></div>
+<h3 id="sec8">1.6 子式与 Laplace 定理</h3>
+<p><strong>子式</strong>：在 <math display="inline"><mi>n</mi></math> 阶行列式中任意选定 <math display="inline"><mi>k</mi></math> 行与 <math display="inline"><mi>k</mi></math> 列，位于这些行、列交叉处的 <math display="inline"><msup><mi>k</mi><mn>2</mn></msup></math> 个元素按原次序组成的 <math display="inline"><mi>k</mi></math> 阶行列式，称为 <math display="inline"><mi>k</mi></math> 阶子式；划去这 <math display="inline"><mi>k</mi></math> 行、<math display="inline"><mi>k</mi></math> 列后余下元素组成的子式，称为该子式的<strong>余子式</strong>。</p>
+<div class="callout key"><div class="callout-title">要点</div><div class="callout-body"><p><strong>Laplace 定理</strong>：由某 <math display="inline"><mi>k</mi></math> 行元素组成的一切 <math display="inline"><mi>k</mi></math> 阶子式与其代数余子式的乘积之和，等于 <math display="inline"><mi>D</mi></math>。</p>
+</div></div>
+<h3 id="sec9">1.7 Cramer 法则</h3>
+<div class="callout key"><div class="callout-title">要点</div><div class="callout-body"><p>设线性方程组的方程个数与未知数个数相同。若其系数行列式 <math display="inline"><mi>D</mi><mo>≠</mo><mn>0</mn></math>，则方程组有唯一解</p>
+<div class="mathblock"><math display="block"><msub><mi>x</mi><mi>j</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>D</mi><mi>j</mi></msub></mrow><mrow><mi>D</mi></mrow></mfrac><mo>,</mo><mspace width="2em"></mspace><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mo>⋯</mo><mo>,</mo><mi>n</mi></math></div>
+<p>其中 <math display="inline"><msub><mi>D</mi><mi>j</mi></msub></math> 是用常数项替换 <math display="inline"><mi>D</mi></math> 中第 <math display="inline"><mi>j</mi></math> 列后所得的行列式。</p>
+</div></div>
+<div class="callout warn"><div class="callout-title">易错</div><div class="callout-body"><p>若齐次线性方程组（常数项全为 <math display="inline"><mn>0</mn></math>）有非零解，则 <math display="inline"><mi>D</mi><mo>=</mo><mn>0</mn></math>。</p>
+</div></div>
+<h3 id="sec10">1.8 行列式的运算性质</h3>
+<div class="mathblock"><math display="block"><mtext>|</mtext><mi>A</mi><mi>B</mi><mtext>|</mtext><mo>=</mo><mtext>|</mtext><mi>A</mi><mtext>|</mtext><mspace width="0.28em"></mspace><mtext>|</mtext><mi>B</mi><mtext>|</mtext><mo>,</mo><mspace width="2em"></mspace><mtext>|</mtext><mi>k</mi><mi>I</mi><mtext>|</mtext><mo>=</mo><msup><mi>k</mi><mrow><mi>n</mi></mrow></msup><mo>,</mo><mspace width="2em"></mspace><mtext>|</mtext><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mtext>|</mtext><mo>=</mo><mtext>|</mtext><mi>A</mi><msup><mtext>|</mtext><mrow><mo>−</mo><mn>1</mn></mrow></msup></math></div>
+<h3 id="sec11">1.9 注意</h3>
+<div class="callout warn"><div class="callout-title">易错</div><div class="callout-body"><p>行列式<strong>没有</strong>线性可加性：</p>
+<div class="mathblock"><math display="block"><mtext>|</mtext><mi>A</mi><mo>+</mo><mi>B</mi><mtext>|</mtext><mo>≠</mo><mtext>|</mtext><mi>A</mi><mtext>|</mtext><mo>+</mo><mtext>|</mtext><mi>B</mi><mtext>|</mtext><mo>.</mo></math></div>
+<p>可以拆的是“矩阵中某一行（列）拆成两组之和”，而不是两个矩阵之和。</p>
+</div></div>
+<h3 id="sec12">1.10 方法与思路</h3>
+<p><strong>① 提取公因式</strong></p>
+<p><strong>例</strong> 计算“每行（列）之和相同”的行列式（下以 4 阶示意）</p>
+<div class="mathblock"><math display="block"><msub><mi>D</mi><mi>n</mi></msub><mo>=</mo><mrow><mo>|</mo><mtable><mtr><mtd><mi>x</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mi>a</mi></mtd><mtd><mi>x</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>x</mi></mtd><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>x</mi></mtd></mtr></mtable><mo>|</mo></mrow><mo>.</mo></math></div>
+<p>把各列都加到第一列，提出公因式：</p>
+<div class="mathblock"><math display="block"><msub><mi>D</mi><mi>n</mi></msub><mo>=</mo><mrow><mo>|</mo><mtable><mtr><mtd><mi>x</mi><mo>+</mo><mn>3</mn><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mi>x</mi><mo>+</mo><mn>3</mn><mi>a</mi></mtd><mtd><mi>x</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mi>x</mi><mo>+</mo><mn>3</mn><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>x</mi></mtd><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mi>x</mi><mo>+</mo><mn>3</mn><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>x</mi></mtd></mtr></mtable><mo>|</mo></mrow><mo>=</mo><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>3</mn><mi>a</mi><mo stretchy="false">)</mo><mrow><mo>|</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mn>1</mn></mtd><mtd><mi>x</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mn>1</mn></mtd><mtd><mi>a</mi></mtd><mtd><mi>x</mi></mtd><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mn>1</mn></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>x</mi></mtd></mtr></mtable><mo>|</mo></mrow><mo>.</mo></math></div>
+<div class="callout note"><div class="callout-title">补注</div><div class="callout-body"><p><math display="inline"><mi>n</mi></math> 阶时第一列提取的是 <math display="inline"><mi>x</mi><mo>+</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mi>a</mi></math>，原稿正是按 <math display="inline"><mi>n</mi></math> 阶写的。</p>
+</div></div>
+<p><strong>② 利用递推关系</strong></p>
+<p>对有明显规律的行列式，可尝试按指定行（列）展开，得到 <math display="inline"><msub><mi>D</mi><mi>n</mi></msub></math> 与 <math display="inline"><msub><mi>D</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub></math> 之间的关系。以三对角行列式为例（下以 5 阶示意）：</p>
+<div class="mathblock"><math display="block"><msub><mi>D</mi><mi>n</mi></msub><mo>=</mo><mrow><mo>|</mo><mtable><mtr><mtd><mn>2</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr></mtable><mo>|</mo></mrow><mo>.</mo></math></div>
+<p>按第一行展开：</p>
+<div class="mathblock"><math display="block"><msub><mi>D</mi><mi>n</mi></msub><mo>=</mo><mn>2</mn><msub><mi>D</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mrow><mn>1</mn><mo>+</mo><mn>2</mn></mrow></msup><mrow><mo>|</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr></mtable><mo>|</mo></mrow><mo>=</mo><mn>2</mn><msub><mi>D</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>D</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msub><mo>.</mo></math></div>
+<p><strong>③ 升阶（加边）</strong></p>
+<p>对阶数较低、或结构不便直接展开的行列式，可先“升阶”：在左上角补一个 <math display="inline"><mn>1</mn></math>，再补一行一列，使新行列式与原行列式相等，然后借新补出的 <math display="inline"><mn>1</mn></math> 作消元。</p>
+<p>原稿标注“4 阶”，以下按 3 阶升为 4 阶示意：</p>
+<div class="mathblock"><math display="block"><mi>D</mi><mo>=</mo><mrow><mo>|</mo><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd><mtd><mi>c</mi></mtd></mtr><mtr><mtd><mi>d</mi></mtd><mtd><mi>e</mi></mtd><mtd><mi>f</mi></mtd></mtr><mtr><mtd><mo>⋯</mo></mtd><mtd></mtd><mtd></mtd></mtr></mtable><mo>|</mo></mrow><mo>=</mo><mrow><mo>|</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd><mtd><mi>c</mi></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mi>d</mi></mtd><mtd><mi>e</mi></mtd><mtd><mi>f</mi></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd></mtd><mtd></mtd><mtd><mo>⋯</mo></mtd></mtr></mtable><mo>|</mo></mrow><mo>=</mo><mrow><mo>|</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd><mtd><mi>c</mi></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mi>d</mi></mtd><mtd><mi>e</mi></mtd><mtd><mi>f</mi></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd></mtd><mtd></mtd><mtd><mo>⋯</mo></mtd></mtr></mtable><mo>|</mo></mrow></math></div>
+<div class="callout key"><div class="callout-title">要点</div><div class="callout-body"><p>两个等号都成立：两次都<strong>沿第一列展开</strong>，第一列的 <math display="inline"><mn>1</mn></math> 配上其余各行的 <math display="inline"><mn>0</mn></math>，恰好还原成右下角的原行列式。补出的第一行写 <math display="inline"><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></math> 还是 <math display="inline"><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mi>a</mi><mo>,</mo><mi>a</mi><mo>,</mo><mi>a</mi><mo stretchy="false">)</mo></math> 都不影响值——沿第一列展开时根本用不到第一行后面的几列。</p>
+</div></div>
+<h2 id="sec13" class="chapter">第二章 矩阵</h2>
+<p><em>原稿 P.06–P.10</em></p>
+<h3 id="sec14">2.1 矩阵的定义与特殊矩阵</h3>
+<p><strong>定义</strong></p>
+<div class="mathblock"><math display="block"><mi>A</mi><mo>=</mo><mrow><mo>(</mo><mtable><mtr><mtd><msub><mi>a</mi><mrow><mn>11</mn></mrow></msub></mtd><mtd><msub><mi>a</mi><mrow><mn>12</mn></mrow></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>a</mi><mrow><mn>1</mn><mi>n</mi></mrow></msub></mtd></mtr><mtr><mtd><msub><mi>a</mi><mrow><mn>21</mn></mrow></msub></mtd><mtd><msub><mi>a</mi><mrow><mn>22</mn></mrow></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>a</mi><mrow><mn>2</mn><mi>n</mi></mrow></msub></mtd></mtr><mtr><mtd><mo>⋮</mo></mtd><mtd><mo>⋮</mo></mtd><mtd></mtd><mtd><mo>⋮</mo></mtd></mtr><mtr><mtd><msub><mi>a</mi><mrow><mi>m</mi><mn>1</mn></mrow></msub></mtd><mtd><msub><mi>a</mi><mrow><mi>m</mi><mn>2</mn></mrow></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>a</mi><mrow><mi>m</mi><mi>n</mi></mrow></msub></mtd></mtr></mtable><mo>)</mo></mrow></math></div>
+<p>称为 <math display="inline"><mi>m</mi><mo>×</mo><mi>n</mi></math> 矩阵，其中 <math display="inline"><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></math> 为第 <math display="inline"><mi>i</mi></math> 行第 <math display="inline"><mi>j</mi></math> 列的元素。</p>
+<p><strong>同型矩阵</strong>：行数、列数分别相等。</p>
+<div class="callout warn"><div class="callout-title">易错</div><div class="callout-body"><p>矩阵相等必须<strong>同型</strong>，且对应位置的元素全部相等。</p>
+</div></div>
+<p><strong>零矩阵</strong> <math display="inline"><mi>O</mi></math>：所有元素为 <math display="inline"><mn>0</mn></math>。</p>
+<p><strong>单位矩阵</strong> <math display="inline"><mi>I</mi></math>：主对角线全为 <math display="inline"><mn>1</mn></math>，其余为 <math display="inline"><mn>0</mn></math>。</p>
+<p><strong>数量矩阵</strong> <math display="inline"><mi>k</mi><mi>I</mi></math>：主对角线全为 <math display="inline"><mi>k</mi></math>，其余为 <math display="inline"><mn>0</mn></math>。</p>
+<div class="mathblock"><math display="block"><mi>I</mi><mo>=</mo><mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mo>⋯</mo></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mo>⋯</mo></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mo>⋮</mo></mtd><mtd><mo>⋮</mo></mtd><mtd><mo>⋱</mo></mtd><mtd><mo>⋮</mo></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mo>⋯</mo></mtd><mtd><mn>1</mn></mtd></mtr></mtable><mo>)</mo></mrow><mo>,</mo><mspace width="2em"></mspace><mi>k</mi><mi>I</mi><mo>=</mo><mrow><mo>(</mo><mtable><mtr><mtd><mi>k</mi></mtd><mtd><mn>0</mn></mtd><mtd><mo>⋯</mo></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mi>k</mi></mtd><mtd><mo>⋯</mo></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mo>⋮</mo></mtd><mtd><mo>⋮</mo></mtd><mtd><mo>⋱</mo></mtd><mtd><mo>⋮</mo></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mo>⋯</mo></mtd><mtd><mi>k</mi></mtd></mtr></mtable><mo>)</mo></mrow></math></div>
+<div class="callout key"><div class="callout-title">要点</div><div class="callout-body"><p>对任意整数 <math display="inline"><mi>k</mi></math> 都有 <math display="inline"><msup><mi>I</mi><mrow><mi>k</mi></mrow></msup><mo>=</mo><mi>I</mi></math>（<math display="inline"><mi>k</mi><mo>&lt;</mo><mn>0</mn></math> 时用到 <math display="inline"><msup><mi>I</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mi>I</mi></math>）。</p>
+</div></div>
+<h3 id="sec15">2.2 加法与数乘</h3>
+<p><strong>加法</strong>：只有同型矩阵才可相加，规则是对应元素相加。</p>
+<div class="mathblock"><math display="block"><mi>A</mi><mo>+</mo><mi>B</mi><mo>=</mo><mi>B</mi><mo>+</mo><mi>A</mi><mo>,</mo><mspace width="2em"></mspace><mo stretchy="false">(</mo><mi>A</mi><mo>+</mo><mi>B</mi><mo stretchy="false">)</mo><mo>+</mo><mi>C</mi><mo>=</mo><mi>A</mi><mo>+</mo><mo stretchy="false">(</mo><mi>B</mi><mo>+</mo><mi>C</mi><mo stretchy="false">)</mo><mo>,</mo><mspace width="2em"></mspace><mi>A</mi><mo>+</mo><mi>O</mi><mo>=</mo><mi>A</mi></math></div>
+<p><strong>数乘</strong>：<math display="inline"><mi>k</mi><mi>A</mi><mo>=</mo><mo stretchy="false">(</mo><mi>k</mi><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false">)</mo></math>。</p>
+<div class="mathblock"><math display="block"><mo stretchy="false">(</mo><mi>k</mi><mi>l</mi><mo stretchy="false">)</mo><mi>A</mi><mo>=</mo><mi>k</mi><mo stretchy="false">(</mo><mi>l</mi><mi>A</mi><mo stretchy="false">)</mo><mo>,</mo><mspace width="1em"></mspace><mi>k</mi><mo stretchy="false">(</mo><mi>A</mi><mo>+</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>k</mi><mi>A</mi><mo>+</mo><mi>k</mi><mi>B</mi><mo>,</mo><mspace width="1em"></mspace><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mi>l</mi><mo stretchy="false">)</mo><mi>A</mi><mo>=</mo><mi>k</mi><mi>A</mi><mo>+</mo><mi>l</mi><mi>A</mi><mo>,</mo><mspace width="1em"></mspace><mn>1</mn><mi>A</mi><mo>=</mo><mi>A</mi><mo>,</mo><mspace width="1em"></mspace><mn>0</mn><mi>A</mi><mo>=</mo><mi>O</mi></math></div>
+<div class="callout warn"><div class="callout-title">易错</div><div class="callout-body"><p>减法同理。不同型的矩阵既不能相加，也不能相减。</p>
+</div></div>
+<h3 id="sec16">2.3 矩阵乘法</h3>
+<div class="callout key"><div class="callout-title">要点</div><div class="callout-body"><p>可乘条件：<math display="inline"><msub><mi>A</mi><mrow><mi>m</mi><mo>×</mo><mi>s</mi></mrow></msub></math> 与 <math display="inline"><msub><mi>B</mi><mrow><mi>s</mi><mo>×</mo><mi>n</mi></mrow></msub></math>，即<strong>左矩阵的列数等于右矩阵的行数</strong>，积为 <math display="inline"><mi>m</mi><mo>×</mo><mi>n</mi></math> 矩阵。</p>
+</div></div>
+<div class="mathblock"><math display="block"><mrow><mo>(</mo><mtable><mtr><mtd><msub><mi>a</mi><mrow><mn>11</mn></mrow></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>a</mi><mrow><mn>1</mn><mi>s</mi></mrow></msub></mtd></mtr><mtr><mtd><mo>⋮</mo></mtd><mtd></mtd><mtd><mo>⋮</mo></mtd></mtr><mtr><mtd><msub><mi>a</mi><mrow><mi>m</mi><mn>1</mn></mrow></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>a</mi><mrow><mi>m</mi><mi>s</mi></mrow></msub></mtd></mtr></mtable><mo>)</mo></mrow><mrow><mo>(</mo><mtable><mtr><mtd><msub><mi>b</mi><mrow><mn>11</mn></mrow></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>b</mi><mrow><mn>1</mn><mi>n</mi></mrow></msub></mtd></mtr><mtr><mtd><mo>⋮</mo></mtd><mtd></mtd><mtd><mo>⋮</mo></mtd></mtr><mtr><mtd><msub><mi>b</mi><mrow><mi>s</mi><mn>1</mn></mrow></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>b</mi><mrow><mi>s</mi><mi>n</mi></mrow></msub></mtd></mtr></mtable><mo>)</mo></mrow><mo>=</mo><mrow><mo>(</mo><mtable><mtr><mtd><msub><mi>c</mi><mrow><mn>11</mn></mrow></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>c</mi><mrow><mn>1</mn><mi>n</mi></mrow></msub></mtd></mtr><mtr><mtd><mo>⋮</mo></mtd><mtd></mtd><mtd><mo>⋮</mo></mtd></mtr><mtr><mtd><msub><mi>c</mi><mrow><mi>m</mi><mn>1</mn></mrow></msub></mtd><mtd><mo>⋯</mo></mtd><mtd><msub><mi>c</mi><mrow><mi>m</mi><mi>n</mi></mrow></msub></mtd></mtr></mtable><mo>)</mo></mrow></math></div>
+<div class="mathblock"><math display="block"><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>s</mi></mrow></msubsup><msub><mi>a</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><msub><mi>b</mi><mrow><mi>k</mi><mi>j</mi></mrow></msub></math></div>
+<p>即 <math display="inline"><mi>A</mi></math> 的第 <math display="inline"><mi>i</mi></math> 行与 <math display="inline"><mi>B</mi></math> 的第 <math display="inline"><mi>j</mi></math> 列作向量点积（对应项相乘再相加）。</p>
+<p><strong>满足的运算律</strong></p>
+<div class="mathblock"><math display="block"><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><mo stretchy="false">)</mo><mi>C</mi><mo>=</mo><mi>A</mi><mo stretchy="false">(</mo><mi>B</mi><mi>C</mi><mo stretchy="false">)</mo><mo>,</mo><mspace width="2em"></mspace><mi>A</mi><mo stretchy="false">(</mo><mi>B</mi><mo>+</mo><mi>C</mi><mo stretchy="false">)</mo><mo>=</mo><mi>A</mi><mi>B</mi><mo>+</mo><mi>A</mi><mi>C</mi><mo>,</mo><mspace width="2em"></mspace><mo stretchy="false">(</mo><mi>B</mi><mo>+</mo><mi>C</mi><mo stretchy="false">)</mo><mi>A</mi><mo>=</mo><mi>B</mi><mi>A</mi><mo>+</mo><mi>C</mi><mi>A</mi></math></div>
+<div class="mathblock"><math display="block"><mi>k</mi><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mi>k</mi><mi>A</mi><mo stretchy="false">)</mo><mi>B</mi><mo>=</mo><mi>A</mi><mo stretchy="false">(</mo><mi>k</mi><mi>B</mi><mo stretchy="false">)</mo></math></div>
+<p><strong>不满足的运算律</strong></p>
+<ul>
+<li><strong>交换律</strong>：一般地 <math display="inline"><mi>A</mi><mi>B</mi><mo>≠</mo><mi>B</mi><mi>A</mi></math>；</li>
+<li><strong>消去律</strong>：由 <math display="inline"><mi>A</mi><mi>B</mi><mo>=</mo><mi>A</mi><mi>C</mi></math> 且 <math display="inline"><mi>A</mi><mo>≠</mo><mi>O</mi></math>，推不出 <math display="inline"><mi>B</mi><mo>=</mo><mi>C</mi></math>；</li>
+<li><strong>零因子</strong>：两个非零矩阵的乘积可能是零矩阵，故由 <math display="inline"><mi>A</mi><mi>B</mi><mo>=</mo><mi>O</mi></math> 推不出 <math display="inline"><mi>A</mi><mo>=</mo><mi>O</mi></math> 或 <math display="inline"><mi>B</mi><mo>=</mo><mi>O</mi></math>；</li>
+<li>一般地 <math display="inline"><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><msup><mo stretchy="false">)</mo><mrow><mi>k</mi></mrow></msup><mo>≠</mo><msup><mi>A</mi><mrow><mi>k</mi></mrow></msup><msup><mi>B</mi><mrow><mi>k</mi></mrow></msup></math>。</li>
+</ul>
+<div class="callout warn"><div class="callout-title">易错</div><div class="callout-body"><p>左乘与右乘不一样。写证明时不能随意交换两个矩阵的顺序。</p>
+</div></div>
+<h3 id="sec17">2.4 转置</h3>
+<div class="mathblock"><math display="block"><mo stretchy="false">(</mo><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup><msup><mo stretchy="false">)</mo><mrow><mtext>T</mtext></mrow></msup><mo>=</mo><mi>A</mi><mo>,</mo><mspace width="2em"></mspace><mo stretchy="false">(</mo><mi>A</mi><mo>+</mo><mi>B</mi><msup><mo stretchy="false">)</mo><mrow><mtext>T</mtext></mrow></msup><mo>=</mo><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup><mo>+</mo><msup><mi>B</mi><mrow><mtext>T</mtext></mrow></msup><mo>,</mo><mspace width="2em"></mspace><mo stretchy="false">(</mo><mi>k</mi><mi>A</mi><msup><mo stretchy="false">)</mo><mrow><mtext>T</mtext></mrow></msup><mo>=</mo><mi>k</mi><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup></math></div>
+<div class="callout warn"><div class="callout-title">易错</div><div class="callout-body"><p>乘积的转置要<strong>反序</strong>：</p>
+<div class="mathblock"><math display="block"><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><msup><mo stretchy="false">)</mo><mrow><mtext>T</mtext></mrow></msup><mo>=</mo><msup><mi>B</mi><mrow><mtext>T</mtext></mrow></msup><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup><mo>.</mo></math></div>
+</div></div>
+<h3 id="sec18">2.5 对称矩阵与反对称矩阵</h3>
+<p>若 <math display="inline"><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup><mo>=</mo><mi>A</mi></math>，称 <math display="inline"><mi>A</mi></math> 为<strong>对称矩阵</strong>；若 <math display="inline"><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup><mo>=</mo><mo>−</mo><mi>A</mi></math>，称 <math display="inline"><mi>A</mi></math> 为<strong>反对称矩阵</strong>。</p>
+<p>① 对称的必要条件：<math display="inline"><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><msub><mi>a</mi><mrow><mi>j</mi><mi>i</mi></mrow></msub></math>。 ② 反对称矩阵的主对角线元素全为 <math display="inline"><mn>0</mn></math>。</p>
+<div class="callout key"><div class="callout-title">要点</div><div class="callout-body"><p>任何方阵都可写成一个对称矩阵与一个反对称矩阵之和：</p>
+<div class="mathblock"><math display="block"><mi>A</mi><mo>=</mo><mfrac><mrow><mi>A</mi><mo>+</mo><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup></mrow><mrow><mn>2</mn></mrow></mfrac><mo>+</mo><mfrac><mrow><mi>A</mi><mo>−</mo><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup></mrow><mrow><mn>2</mn></mrow></mfrac><mo>,</mo></math></div>
+<p>其中 <math display="inline"><mfrac><mrow><mi>A</mi><mo>+</mo><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup></mrow><mrow><mn>2</mn></mrow></mfrac></math> 对称，<math display="inline"><mfrac><mrow><mi>A</mi><mo>−</mo><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup></mrow><mrow><mn>2</mn></mrow></mfrac></math> 反对称。</p>
+</div></div>
+<h3 id="sec19">2.6 可逆矩阵与伴随矩阵</h3>
+<p><strong>逆矩阵</strong>：若</p>
+<div class="mathblock"><math display="block"><mi>A</mi><mi>B</mi><mo>=</mo><mi>B</mi><mi>A</mi><mo>=</mo><mi>I</mi><mo>,</mo></math></div>
+<p>则称 <math display="inline"><mi>A</mi></math> 可逆，<math display="inline"><mi>B</mi></math> 为 <math display="inline"><mi>A</mi></math> 的逆矩阵，记 <math display="inline"><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mi>B</mi></math>（仅对方阵而言）。</p>
+<div class="callout key"><div class="callout-title">要点</div><div class="callout-body"><p>若 <math display="inline"><mi>A</mi></math> 可逆，则其逆矩阵唯一。</p>
+</div></div>
+<p><strong>伴随矩阵</strong>：把 <math display="inline"><mi>A</mi></math> 的每个元素换成它的代数余子式，再转置，所得矩阵记作 <math display="inline"><msup><mi>A</mi><mrow><mo>⋅</mo></mrow></msup></math>。</p>
+<div class="callout key"><div class="callout-title">要点</div><div class="callout-body"><p><math display="inline"><mi>n</mi></math> 阶方阵 <math display="inline"><mi>A</mi></math> 可逆的充要条件是 <math display="inline"><mtext>|</mtext><mi>A</mi><mtext>|</mtext><mo>≠</mo><mn>0</mn></math>，且</p>
+<div class="mathblock"><math display="block"><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mfrac><mrow><msup><mi>A</mi><mrow><mo>⋅</mo></mrow></msup></mrow><mrow><mtext>|</mtext><mi>A</mi><mtext>|</mtext></mrow></mfrac><mo>.</mo></math></div>
+</div></div>
+<p><strong>二阶矩阵求逆</strong></p>
+<div class="mathblock"><math display="block"><msup><mrow><mo>(</mo><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable><mo>)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi></mrow></mfrac><mrow><mo>(</mo><mtable><mtr><mtd><mi>d</mi></mtd><mtd><mo>−</mo><mi>b</mi></mtd></mtr><mtr><mtd><mo>−</mo><mi>c</mi></mtd><mtd><mi>a</mi></mtd></mtr></mtable><mo>)</mo></mrow><mspace width="2em"></mspace><mo stretchy="false">(</mo><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi><mo>≠</mo><mn>0</mn><mo stretchy="false">)</mo></math></div>
+<div class="callout key"><div class="callout-title">要点</div><div class="callout-body"><p>条件可以减弱：若存在 <math display="inline"><mi>n</mi></math> 阶方阵 <math display="inline"><mi>B</mi></math> 使 <math display="inline"><mi>A</mi><mi>B</mi><mo>=</mo><mi>I</mi></math>，则 <math display="inline"><mi>A</mi></math> 可逆，且自动有 <math display="inline"><mi>B</mi><mi>A</mi><mo>=</mo><mi>I</mi></math>。</p>
+</div></div>
+<p><strong>运算律</strong></p>
+<div class="mathblock"><math display="block"><mo stretchy="false">(</mo><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mo stretchy="false">)</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mi>A</mi><mo>,</mo><mspace width="2em"></mspace><mo stretchy="false">(</mo><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mo stretchy="false">)</mo><mrow><mtext>T</mtext></mrow></msup><mo>=</mo><mo stretchy="false">(</mo><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup><msup><mo stretchy="false">)</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>,</mo><mspace width="2em"></mspace><mo stretchy="false">(</mo><mi>k</mi><mi>A</mi><msup><mo stretchy="false">)</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>k</mi></mrow></mfrac><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mspace width="0.28em"></mspace><mo stretchy="false">(</mo><mi>k</mi><mo>≠</mo><mn>0</mn><mo stretchy="false">)</mo></math></div>
+<div class="mathblock"><math display="block"><mtext>|</mtext><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mtext>|</mtext><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mtext>|</mtext><mi>A</mi><mtext>|</mtext></mrow></mfrac><mo>=</mo><mtext>|</mtext><mi>A</mi><msup><mtext>|</mtext><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>,</mo><mspace width="2em"></mspace><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><msup><mo stretchy="false">)</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><msup><mi>B</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></math></div>
+<p><strong>伴随矩阵的性质</strong></p>
+<div class="mathblock"><math display="block"><msup><mi>A</mi><mrow><mo>⋅</mo></mrow></msup><mi>A</mi><mo>=</mo><mi>A</mi><msup><mi>A</mi><mrow><mo>⋅</mo></mrow></msup><mo>=</mo><mtext>|</mtext><mi>A</mi><mtext>|</mtext><mi>I</mi><mo>,</mo><mspace width="2em"></mspace><msup><mi>A</mi><mrow><mo>⋅</mo></mrow></msup><mo>=</mo><mtext>|</mtext><mi>A</mi><mtext>|</mtext><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>,</mo><mspace width="2em"></mspace><mtext>|</mtext><msup><mi>A</mi><mrow><mo>⋅</mo></mrow></msup><mtext>|</mtext><mo>=</mo><mtext>|</mtext><mi>A</mi><msup><mtext>|</mtext><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></math></div>
+<div class="callout warn"><div class="callout-title">易错</div><div class="callout-body"><p><math display="inline"><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><msup><mo stretchy="false">)</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><msup><mi>B</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></math> 要反序，且要求 <math display="inline"><mi>A</mi></math>、<math display="inline"><mi>B</mi></math> 都可逆。</p>
+</div></div>
+<h3 id="sec20">2.7 分块矩阵</h3>
+<h3 id="sec21">2.8 注意（原稿此页空白）</h3>
+<h3 id="sec22">2.9 方法与思路</h3>
+<p><strong>① 拆分矩阵运算</strong></p>
+<p><strong>例</strong> 计算</p>
+<div class="mathblock"><math display="block"><msup><mrow><mo>(</mo><mtable><mtr><mtd><mi>λ</mi></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mi>λ</mi></mtd><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mi>λ</mi></mtd></mtr></mtable><mo>)</mo></mrow><mrow><mspace width="-0.17em"></mspace><mi>n</mi></mrow></msup><mo>.</mo></math></div>
+<p>把原矩阵拆成 <math display="inline"><mi>λ</mi><mi>I</mi><mo>+</mo><mi>N</mi></math>，其中</p>
+<div class="mathblock"><math display="block"><mi>N</mi><mo>=</mo><mrow><mo>(</mo><mtable><mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr></mtable><mo>)</mo></mrow><mo>.</mo></math></div>
+<p>由于 <math display="inline"><mi>N</mi></math> 与 <math display="inline"><mi>λ</mi><mi>I</mi></math> 可交换，可用二项式定理展开：</p>
+<div class="mathblock"><math display="block"><mo stretchy="false">(</mo><mi>λ</mi><mi>I</mi><mo>+</mo><mi>N</mi><msup><mo stretchy="false">)</mo><mrow><mi>n</mi></mrow></msup><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>n</mi></mrow></msubsup><msubsup><mi>C</mi><mi>n</mi><mrow><mi>k</mi></mrow></msubsup><mo stretchy="false">(</mo><mi>λ</mi><mi>I</mi><msup><mo stretchy="false">)</mo><mrow><mi>n</mi><mo>−</mo><mi>k</mi></mrow></msup><msup><mi>N</mi><mrow><mi>k</mi></mrow></msup><mo>.</mo></math></div>
+<p>由</p>
+<div class="mathblock"><math display="block"><msup><mi>N</mi><mrow><mn>2</mn></mrow></msup><mo>=</mo><mrow><mo>(</mo><mtable><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr></mtable><mo>)</mo></mrow><mo>,</mo><mspace width="2em"></mspace><msup><mi>N</mi><mrow><mn>3</mn></mrow></msup><mo>=</mo><mi>O</mi></math></div>
+<p>可知 <math display="inline"><msup><mi>N</mi><mrow><mn>3</mn></mrow></msup></math> 及其后各项均为 <math display="inline"><mi>O</mi></math>，故只保留前三项。</p>
+<p><strong>② 求逆矩阵</strong></p>
+<ul>
+<li>条件充足时，直接按 <math display="inline"><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mfrac><mrow><msup><mi>A</mi><mrow><mo>⋅</mo></mrow></msup></mrow><mrow><mtext>|</mtext><mi>A</mi><mtext>|</mtext></mrow></mfrac></math> 或初等变换计算；</li>
+<li>条件不足时，依据 <math display="inline"><mi>A</mi><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mi>I</mi></math> 反向“凑”出 <math display="inline"><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></math>。</li>
+</ul>
+<p><strong>例</strong> 设 <math display="inline"><msup><mi>A</mi><mrow><mn>3</mn></mrow></msup><mo>=</mo><mn>2</mn><mi>I</mi></math>，证明 <math display="inline"><mi>A</mi><mo>+</mo><mn>2</mn><mi>I</mi></math> 可逆，并求 <math display="inline"><mo stretchy="false">(</mo><mi>A</mi><mo>+</mo><mn>2</mn><mi>I</mi><msup><mo stretchy="false">)</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup></math>。</p>
+<p>用立方和公式</p>
+<div class="mathblock"><math display="block"><msup><mi>A</mi><mrow><mn>3</mn></mrow></msup><mo>+</mo><mo stretchy="false">(</mo><mn>2</mn><mi>I</mi><msup><mo stretchy="false">)</mo><mrow><mn>3</mn></mrow></msup><mo>=</mo><mo stretchy="false">(</mo><mi>A</mi><mo>+</mo><mn>2</mn><mi>I</mi><mo stretchy="false">)</mo><mrow><mo>(</mo><msup><mi>A</mi><mrow><mn>2</mn></mrow></msup><mo>−</mo><mn>2</mn><mi>I</mi><mi>A</mi><mo>+</mo><mn>4</mn><msup><mi>I</mi><mrow><mn>2</mn></mrow></msup><mo>)</mo></mrow><mo>,</mo></math></div>
+<p>左边 <math display="inline"><mo>=</mo><mn>2</mn><mi>I</mi><mo>+</mo><mn>8</mn><mi>I</mi><mo>=</mo><mn>10</mn><mi>I</mi></math>，于是</p>
+<div class="mathblock"><math display="block"><mo stretchy="false">(</mo><mi>A</mi><mo>+</mo><mn>2</mn><mi>I</mi><mo stretchy="false">)</mo><mrow><mo>[</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>10</mn></mrow></mfrac><mrow><mo>(</mo><msup><mi>A</mi><mrow><mn>2</mn></mrow></msup><mo>−</mo><mn>2</mn><mi>I</mi><mi>A</mi><mo>+</mo><mn>4</mn><msup><mi>I</mi><mrow><mn>2</mn></mrow></msup><mo>)</mo></mrow><mo>]</mo></mrow><mo>=</mo><mi>I</mi><mo>,</mo></math></div>
+<p>所以 <math display="inline"><mi>A</mi><mo>+</mo><mn>2</mn><mi>I</mi></math> 可逆，且</p>
+<div class="mathblock"><math display="block"><mo stretchy="false">(</mo><mi>A</mi><mo>+</mo><mn>2</mn><mi>I</mi><msup><mo stretchy="false">)</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>10</mn></mrow></mfrac><mrow><mo>(</mo><msup><mi>A</mi><mrow><mn>2</mn></mrow></msup><mo>−</mo><mn>2</mn><mi>I</mi><mi>A</mi><mo>+</mo><mn>4</mn><msup><mi>I</mi><mrow><mn>2</mn></mrow></msup><mo>)</mo></mrow><mo>.</mo></math></div>
+<div class="callout note"><div class="callout-title">补注</div><div class="callout-body"><p>原稿中间两步只写了“<math display="inline"><mn>2</mn><mi>I</mi><mo>+</mo><mn>8</mn><mi>I</mi><mo>=</mo><mo>⋯</mo></math>”“<math display="inline"><mn>10</mn><mi>I</mi><mo>=</mo><mo>⋯</mo></math>”，此处补全。</p>
+</div></div>
+<p><strong>③ 线性关系式</strong></p>
+<p>遇到 <math display="inline"><mi>A</mi><mi>B</mi><mo>=</mo><mi>A</mi><mo>+</mo><mi>B</mi></math> 或 <math display="inline"><mi>A</mi><mi>B</mi><mo>=</mo><mi>A</mi><mo>−</mo><mi>B</mi></math> 这类条件，可“同加 <math display="inline"><mi>I</mi></math>”后因式分解：</p>
+<div class="mathblock"><math display="block"><mi>A</mi><mi>B</mi><mo>−</mo><mi>A</mi><mo>−</mo><mi>B</mi><mo>+</mo><mi>I</mi><mo>=</mo><mi>I</mi><mspace width="0.28em"></mspace><mo>⟹</mo><mspace width="0.28em"></mspace><mo stretchy="false">(</mo><mi>A</mi><mo>−</mo><mi>I</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>B</mi><mo>−</mo><mi>I</mi><mo stretchy="false">)</mo><mo>=</mo><mi>I</mi><mo>,</mo></math></div>
+<p>（因为 <math display="inline"><msup><mi>I</mi><mrow><mn>2</mn></mrow></msup><mo>=</mo><mi>I</mi></math>。）于是 <math display="inline"><mi>A</mi><mo>−</mo><mi>I</mi></math> 与 <math display="inline"><mi>B</mi><mo>−</mo><mi>I</mi></math> 互为逆矩阵。</p>
+<h2 id="sec23" class="chapter">附录 A 公式速查表</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>主题</th><th>公式</th><th>条件 / 说明</th></tr></thead>
+<tbody>
+<tr><td>余子式与代数余子式</td><td><math display="inline"><msub><mi>A</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mrow><mi>i</mi><mo>+</mo><mi>j</mi></mrow></msup><msub><mi>M</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></math></td><td><math display="inline"><msub><mi>M</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></math> 为划去第 <math display="inline"><mi>i</mi></math> 行第 <math display="inline"><mi>j</mi></math> 列所得</td></tr>
+<tr><td>按行（列）展开</td><td><math display="inline"><msub><mo>∑</mo><mrow><mi>k</mi></mrow></msub><msub><mi>a</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><msub><mi>A</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><mo>=</mo><mi>D</mi></math></td><td>任一 <math display="inline"><mi>i</mi></math>（或 <math display="inline"><mi>j</mi></math>）</td></tr>
+<tr><td>异乘变零</td><td><math display="inline"><msub><mo>∑</mo><mrow><mi>k</mi></mrow></msub><msub><mi>a</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><msub><mi>A</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>=</mo><mn>0</mn></math></td><td><math display="inline"><mi>i</mi><mo>≠</mo><mi>j</mi></math></td></tr>
+<tr><td>上三角行列式</td><td><math display="inline"><msubsup><mo>∏</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></msubsup><msub><mi>a</mi><mrow><mi>i</mi><mi>i</mi></mrow></msub></math></td><td>主对角线之积</td></tr>
+<tr><td>排列展开</td><td><math display="inline"><mo>∑</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mrow><mi>T</mi><mo stretchy="false">(</mo><msub><mi>p</mi><mn>1</mn></msub><mo>⋯</mo><msub><mi>p</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></msup><msub><mi>a</mi><mrow><mn>1</mn><msub><mi>p</mi><mn>1</mn></msub></mrow></msub><mo>⋯</mo><msub><mi>a</mi><mrow><mi>n</mi><msub><mi>p</mi><mi>n</mi></msub></mrow></msub></math></td><td>共 <math display="inline"><mi>n</mi><mo>!</mo></math> 项</td></tr>
+<tr><td>范德蒙德</td><td><math display="inline"><msub><mo>∏</mo><mrow><mn>1</mn><mo>≤</mo><mi>j</mi><mo>&lt;</mo><mi>i</mi><mo>≤</mo><mi>n</mi></mrow></msub><mo stretchy="false">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>−</mo><msub><mi>a</mi><mi>j</mi></msub><mo stretchy="false">)</mo></math></td><td><math display="inline"><msub><mi>a</mi><mi>i</mi></msub></math> 互异则非零</td></tr>
+<tr><td>转置</td><td><math display="inline"><msup><mi>D</mi><mrow><mtext>T</mtext></mrow></msup><mo>=</mo><mi>D</mi></math></td><td>行列互换不变</td></tr>
+<tr><td>两行（列）相同或成比例</td><td><math display="inline"><mi>D</mi><mo>=</mo><mn>0</mn></math></td><td></td></tr>
+<tr><td>交换两行（列）</td><td><math display="inline"><mi>D</mi></math> 反号</td><td></td></tr>
+<tr><td>倍加变换</td><td><math display="inline"><mi>D</mi></math> 不变</td><td>第 <math display="inline"><mi>j</mi></math> 行的 <math display="inline"><mi>k</mi></math> 倍加到第 <math display="inline"><mi>i</mi></math> 行</td></tr>
+<tr><td>升阶（加边）</td><td><math display="inline"><mrow><mo>|</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mi>A</mi></mtd></mtr></mtable><mo>|</mo></mrow><mo>=</mo><mtext>|</mtext><mi>A</mi><mtext>|</mtext></math></td><td>左上补 <math display="inline"><mn>1</mn></math>，沿第一列展开即还原</td></tr>
+<tr><td>Laplace 定理</td><td><math display="inline"><mo>∑</mo><mo stretchy="false">(</mo><mtext></mtext></math>k<math display="inline"><mtext>阶子式</mtext></math></td><td>固定 <math display="inline"><mi>k</mi></math> 行</td></tr>
+<tr><td>Cramer 法则</td><td><math display="inline"><msub><mi>x</mi><mi>j</mi></msub><mo>=</mo><msub><mi>D</mi><mi>j</mi></msub><mo>/</mo><mi>D</mi></math></td><td><math display="inline"><mi>D</mi><mo>≠</mo><mn>0</mn></math></td></tr>
+<tr><td>齐次方程组</td><td>有非零解 <math display="inline"><mo>⇒</mo><mi>D</mi><mo>=</mo><mn>0</mn></math></td><td>常数项全为 <math display="inline"><mn>0</mn></math></td></tr>
+<tr><td>行列式乘法</td><td><math display="inline"><mtext>|</mtext><mi>A</mi><mi>B</mi><mtext>|</mtext><mo>=</mo><mtext>|</mtext><mi>A</mi><mtext>|</mtext><mtext>|</mtext><mi>B</mi><mtext>|</mtext></math></td><td>方阵</td></tr>
+<tr><td>行列式数乘</td><td><math display="inline"><mtext>|</mtext><mi>k</mi><mi>A</mi><mtext>|</mtext><mo>=</mo><msup><mi>k</mi><mrow><mi>n</mi></mrow></msup><mtext>|</mtext><mi>A</mi><mtext>|</mtext></math></td><td><math display="inline"><mi>n</mi></math> 阶方阵</td></tr>
+<tr><td>逆矩阵</td><td><math display="inline"><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><msup><mi>A</mi><mrow><mo>⋅</mo></mrow></msup><mo>/</mo><mtext>|</mtext><mi>A</mi><mtext>|</mtext></math></td><td><math display="inline"><mtext>|</mtext><mi>A</mi><mtext>|</mtext><mo>≠</mo><mn>0</mn></math></td></tr>
+<tr><td>二阶逆</td><td><math display="inline"><mfrac><mrow><mn>1</mn></mrow><mrow><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi></mrow></mfrac><mrow><mo>(</mo><mtable><mtr><mtd><mi>d</mi></mtd><mtd><mo>−</mo><mi>b</mi></mtd></mtr><mtr><mtd><mo>−</mo><mi>c</mi></mtd><mtd><mi>a</mi></mtd></mtr></mtable><mo>)</mo></mrow></math></td><td><math display="inline"><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi><mo>≠</mo><mn>0</mn></math></td></tr>
+<tr><td>伴随矩阵</td><td><math display="inline"><msup><mi>A</mi><mrow><mo>⋅</mo></mrow></msup><mi>A</mi><mo>=</mo><mi>A</mi><msup><mi>A</mi><mrow><mo>⋅</mo></mrow></msup><mo>=</mo><mtext>|</mtext><mi>A</mi><mtext>|</mtext><mi>I</mi></math></td><td><math display="inline"><mtext>|</mtext><msup><mi>A</mi><mrow><mo>⋅</mo></mrow></msup><mtext>|</mtext><mo>=</mo><mtext>|</mtext><mi>A</mi><msup><mtext>|</mtext><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></math></td></tr>
+<tr><td>转置与逆</td><td><math display="inline"><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><msup><mo stretchy="false">)</mo><mrow><mtext>T</mtext></mrow></msup><mo>=</mo><msup><mi>B</mi><mrow><mtext>T</mtext></mrow></msup><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup></math></td><td>乘积要反序</td></tr>
+<tr><td>逆与乘积</td><td><math display="inline"><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><msup><mo stretchy="false">)</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><msup><mi>B</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></math></td><td>乘积要反序</td></tr>
+<tr><td>对称分解</td><td><math display="inline"><mi>A</mi><mo>=</mo><mfrac><mrow><mi>A</mi><mo>+</mo><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup></mrow><mrow><mn>2</mn></mrow></mfrac><mo>+</mo><mfrac><mrow><mi>A</mi><mo>−</mo><msup><mi>A</mi><mrow><mtext>T</mtext></mrow></msup></mrow><mrow><mn>2</mn></mrow></mfrac></math></td><td>对称 <math display="inline"><mo>+</mo></math> 反对称</td></tr>
+<tr><td>矩阵乘法</td><td><math display="inline"><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><msub><mo>∑</mo><mrow><mi>k</mi></mrow></msub><msub><mi>a</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><msub><mi>b</mi><mrow><mi>k</mi><mi>j</mi></mrow></msub></math></td><td>左列数 <math display="inline"><mo>=</mo></math> 右行数</td></tr>
+<tr><td>幂等变形</td><td><math display="inline"><mi>A</mi><mi>B</mi><mo>=</mo><mi>A</mi><mo>+</mo><mi>B</mi><mo>⇒</mo><mo stretchy="false">(</mo><mi>A</mi><mo>−</mo><mi>I</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>B</mi><mo>−</mo><mi>I</mi><mo stretchy="false">)</mo><mo>=</mo><mi>I</mi></math></td><td>同加 <math display="inline"><mi>I</mi></math> 后分解</td></tr>
+</tbody></table></div>
+<h2 id="sec24" class="chapter">附录 B 原稿页码对照</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>原稿页</th><th>主要内容</th><th>对应章节</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td>P.01</td><td>余子式、按列展开、上三角、排列展开、性质 ①–⑥</td><td>1.1–1.4</td><td>页眉“线性代数 / 行列式”</td></tr>
+<tr><td>P.02</td><td>性质 ⑦–⑩、范德蒙德、子式与 Laplace</td><td>1.4–1.6</td><td></td></tr>
+<tr><td>P.03</td><td>Cramer 法则、运算性质</td><td>1.7–1.8</td><td></td></tr>
+<tr><td>P.04</td><td>行列式没有线性可加性</td><td>1.9</td><td>几乎空白页</td></tr>
+<tr><td>P.05</td><td>方法与思路 ①–③</td><td>1.10</td><td>第一章“方法与思路”</td></tr>
+<tr><td>P.06</td><td>矩阵定义、特殊矩阵、加法与数乘</td><td>2.1–2.2</td><td></td></tr>
+<tr><td>P.07</td><td>乘法、转置、对称与反对称</td><td>2.3–2.5</td><td></td></tr>
+<tr><td>P.08</td><td>可逆、伴随、分块矩阵（仅标题）</td><td>2.6–2.7</td><td>页末“分块矩阵”无正文</td></tr>
+<tr><td>P.09</td><td>仅“二、注意”标题</td><td>2.8</td><td>正文空白</td></tr>
+<tr><td>P.10</td><td>方法与思路 ①–③</td><td>2.9</td><td></td></tr>
+</tbody></table></div>
+
+</main>
+</div>
+<script>
+(function(){
+  var content = document.getElementById('content');
+  var input = document.getElementById('q');
+  var count = document.getElementById('qcount');
+  var clearBtn = document.getElementById('clear');
+  var editBtn = document.getElementById('edit');
+  var printBtn = document.getElementById('print');
+
+  function clearMarks(){
+    var marks = document.querySelectorAll('mark.hit');
+    for (var i=0;i<marks.length;i++){
+      var m = marks[i];
+      m.parentNode.replaceChild(document.createTextNode(m.textContent), m);
+    }
+    content.normalize();
+  }
+
+  function highlight(term){
+    var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null);
+    var nodes = [], n;
+    while ((n = walker.nextNode())) nodes.push(n);
+    var total = 0;
+    for (var k=0;k<nodes.length;k++){
+      var node = nodes[k];
+      var txt = node.nodeValue;
+      if (!txt) continue;
+      var parent = node.parentNode;
+      if (!parent || /^(SCRIPT|STYLE)$/.test(parent.tagName)) continue;
+      if (parent.closest && parent.closest('math')) continue;
+      var lower = txt.toLowerCase();
+      if (lower.indexOf(term) === -1) continue;
+      var frag = document.createDocumentFragment();
+      var idx = 0, pos;
+      while ((pos = lower.indexOf(term, idx)) !== -1){
+        if (pos > idx) frag.appendChild(document.createTextNode(txt.slice(idx, pos)));
+        var mk = document.createElement('mark');
+        mk.className = 'hit';
+        mk.textContent = txt.slice(pos, pos + term.length);
+        frag.appendChild(mk);
+        idx = pos + term.length;
+        total++;
+      }
+      if (idx < txt.length) frag.appendChild(document.createTextNode(txt.slice(idx)));
+      parent.replaceChild(frag, node);
+    }
+    return total;
+  }
+  var timer = null;
+  if (input){
+    input.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        clearMarks();
+        var term = input.value.trim();
+        if (!term){ count.textContent = ''; return; }
+        var hits = 0;
+        try { hits = highlight(term.toLowerCase()); } catch(e) {}
+        count.textContent = hits ? hits + ' 处' : '未找到';
+      }, 160);
+    });
+    input.addEventListener('keydown', function(e){ if (e.key === 'Enter') e.preventDefault(); });
+  }
+  if (clearBtn) clearBtn.onclick = function(){ if(input){input.value='';} clearMarks(); if(count) count.textContent=''; };
+  if (editBtn) editBtn.onclick = function(){
+    var on = content.getAttribute('contenteditable') === 'true';
+    content.setAttribute('contenteditable', on ? 'false' : 'true');
+    document.body.classList.toggle('editing', !on);
+    editBtn.classList.toggle('on', !on);
+    editBtn.textContent = on ? '编辑模式' : '退出编辑';
+    if (!on) content.focus();
+  };
+  if (printBtn) printBtn.onclick = function(){ window.print(); };
+  try {
+    var mm = (location.search || '').match(/[?&]y=(d+)/);
+    if (mm) window.scrollTo(0, parseInt(mm[1], 10));
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
